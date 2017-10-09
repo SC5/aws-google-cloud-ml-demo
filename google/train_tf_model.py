@@ -4,9 +4,10 @@ import numpy as np
 import keras
 import keras.backend as K
 
-np.random.seed(1337) # Seed the random number generator for consistent results
+# np.random.seed(1337) # Seed the random number generator for consistent results
 
 from keras.models import Sequential 
+from keras import regularizers
 from keras.layers import Dense, Activation, Dropout
 from keras.utils import to_categorical
 
@@ -39,7 +40,10 @@ with open('../datasets/iris/Iris.csv', 'r') as csvfile:
       Y.append(2)
 X = np.array(X)
 
-# Convert labels to one-hot vectors (required by Keras)
+# Convert labels to one-hot vectors (required by Keras):
+# Label 0 becomes [1,0,0]
+# Label 1 becomes [0,0,1]
+# Label 2 becomes [0,0,1]
 Y = to_categorical(Y)
 
 # Create the logistic regression (classification) model
@@ -47,7 +51,7 @@ model = Sequential()
 #model.add(Dense(3, activation='relu', input_dim=X.shape[1]))
 model.add(Dense(3, activation='softmax', input_dim=X.shape[1]))
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
-model.fit(X, Y, epochs=5000, shuffle=True, validation_split=0.2)
+model.fit(X, Y, epochs=10000, shuffle=True, validation_split=0.2)
 
 print('Iris-setosa has class number 0')
 print('Iris-versicolor has class number 1')
@@ -63,6 +67,8 @@ print('Predicted class: ' + str(np.argmax(model.predict(test_example)[0])))
 print('Prediction distribution: ' + str(model.predict(test_example)[0]))
 
 shutil.rmtree('model/')
+
+# Save TensorFlow compatible model
 builder = saved_model_builder.SavedModelBuilder('model/')
 signature = predict_signature_def(inputs={'features': model.input},
                                   outputs={'classes': model.output})
