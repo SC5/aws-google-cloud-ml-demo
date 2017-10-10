@@ -9,7 +9,9 @@ import keras.backend as K
 from keras.models import Sequential 
 from keras import regularizers
 from keras.layers import Dense, Activation, Dropout
+from keras.optimizers import RMSprop
 from keras.utils import to_categorical
+from keras.regularizers import l2
 
 # Import TensorFlow model saving utilities
 from tensorflow.python.saved_model import builder as saved_model_builder
@@ -49,9 +51,9 @@ Y = to_categorical(Y)
 # Create the logistic regression (classification) model
 model = Sequential()
 #model.add(Dense(3, activation='relu', input_dim=X.shape[1]))
-model.add(Dense(3, activation='softmax', input_dim=X.shape[1]))
-model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
-model.fit(X, Y, epochs=10000, shuffle=True, validation_split=0.2)
+model.add(Dense(3, activation='softmax', input_dim=X.shape[1], kernel_regularizer=l2(0.001)))
+model.compile(optimizer=RMSprop(lr=0.01), loss='categorical_crossentropy', metrics=['accuracy'])
+model.fit(X, Y, epochs=2500, shuffle=True, validation_split=0.2)
 
 print('Iris-setosa has class number 0')
 print('Iris-versicolor has class number 1')
