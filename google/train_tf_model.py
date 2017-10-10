@@ -4,7 +4,7 @@ import numpy as np
 import keras
 import keras.backend as K
 
-# np.random.seed(1337) # Seed the random number generator for consistent results
+np.random.seed(123456) # Seed the random number generator for consistent results
 
 from keras.models import Sequential 
 from keras import regularizers
@@ -51,9 +51,9 @@ Y = to_categorical(Y)
 # Create the logistic regression (classification) model
 model = Sequential()
 #model.add(Dense(3, activation='relu', input_dim=X.shape[1]))
-model.add(Dense(3, activation='softmax', input_dim=X.shape[1], kernel_regularizer=l2(0.001)))
+model.add(Dense(3, activation='softmax', input_dim=X.shape[1], kernel_regularizer=l2(0.0001)))
 model.compile(optimizer=RMSprop(lr=0.01), loss='categorical_crossentropy', metrics=['accuracy'])
-model.fit(X, Y, epochs=2500, shuffle=True, validation_split=0.2)
+model.fit(X, Y, epochs=2000, shuffle=True, validation_split=0.2)
 
 print('Iris-setosa has class number 0')
 print('Iris-versicolor has class number 1')
