@@ -44,14 +44,13 @@ X = np.array(X)
 
 # Convert labels to one-hot vectors (required by Keras):
 # Label 0 becomes [1,0,0]
-# Label 1 becomes [0,0,1]
+# Label 1 becomes [0,1,0]
 # Label 2 becomes [0,0,1]
 Y = to_categorical(Y)
 
 # Create the logistic regression (classification) model
 model = Sequential()
-#model.add(Dense(3, activation='relu', input_dim=X.shape[1]))
-model.add(Dense(3, activation='softmax', input_dim=X.shape[1], kernel_regularizer=l2(0.0001)))
+model.add(Dense(3, activation='softmax'))
 model.compile(optimizer=RMSprop(lr=0.01), loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit(X, Y, epochs=2000, shuffle=True, validation_split=0.2)
 
